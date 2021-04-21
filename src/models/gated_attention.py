@@ -86,7 +86,7 @@ class AttentionGated(nn.Module):
         )
 
         self.feature_extractor_part2 = nn.Sequential(
-            nn.Linear(42050, self.L),
+            nn.Linear(50*4*4, self.L),
             nn.ReLU(),
         )
 

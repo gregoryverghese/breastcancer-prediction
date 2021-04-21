@@ -10,7 +10,8 @@ import torch.nn.functional as F
 from tensorflow.keras.utils import Progbar
 from tqdm import tqdm, trange
 
-import models.gated_attention
+#import models.gated_attention
+import models.attention
 
 
 class Trainer():
@@ -36,12 +37,12 @@ class Trainer():
             train_info=' Epoch:{}/{},trainloss-{:.2f},acc-{:.2f} '
             #valid_info='validloss-{:.2f},validerror-{:.2f}'
             #loss_temp=train_loss.detach()
-            #loss_temp=loss_temp.cpu().numpy()[0]
-            #error_temp=train_error
-            #acc = (1-error_temp)*100
+            loss_temp=train_loss.cpu().numpy()[0]
+            error_temp=train_error
+            acc = (1-error_temp)*100
             #error_temp=train_error.detach() 
             #error_temp=error_temp.cpu().numpy()[0]
-            #print(train_info.format(i+1,self.epochs,loss_temp,acc))
+            print(train_info.format(i+1,self.epochs,loss_temp,acc))
             #print(valid_info.format(i+1,valid_loss,valid_error),end="")
 
         return self.train_loss #self.valid_loss
@@ -52,7 +53,6 @@ class Trainer():
         train_loss=0.
         train_error=0.            
         prog = Progbar(len(self.train_loader))
-        print('paramters',self.model.parameters)
         for i, (x,y) in enumerate(self.train_loader):
             x=x.float()
             y=y[0]
@@ -64,8 +64,8 @@ class Trainer():
             error, _ = self.model.calculate_classification_error(x, y)
             train_error += error
             loss.backward()
-            for name, param in self.model.named_parameters():
-                print(name, param.grad)
+            #for name, param in self.model.named_parameters():
+                #print(name, param.grad)
 
             self.optimizer.step()
             prog.update(i)
